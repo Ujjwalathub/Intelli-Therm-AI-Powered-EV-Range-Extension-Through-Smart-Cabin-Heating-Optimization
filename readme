@@ -1,0 +1,127 @@
+# Intelli-Therm: AI-Powered EV Range Extension Through Smart Cabin Heating Optimization
+
+[![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
+[![Pandas](https://img.shields.io/badge/Pandas-blueviolet)](https://pandas.pydata.org/)
+[![NumPy](https://img.shields.io/badge/NumPy-orange)](https://numpy.org/)
+[![Scikit-learn](https://img.shields.io/badge/Scikit--learn-brightgreen)](https://scikit-learn.org/)
+[![XGBoost](https://img.shields.io/badge/XGBoost-darkblue)](https://xgboost.ai/)
+[![Matplotlib](https://img.shields.io/badge/Matplotlib-yellow)](https://matplotlib.org/)
+[![Seaborn](https://img.shields.io/badge/Seaborn-purple)](https://seaborn.pydata.org/)
+
+---
+
+### **Live Demo & Frontend**
+
+**[<-- Click Here to View the Live Demo -->](https://v0-intelli-therm-frontend-developme.vercel.app/)**
+
+*(Note: The provided link was inaccessible during this analysis. Please ensure the link is correct and the deployment is active.)*
+
+The frontend provides a user-friendly interface to visualize the Intelli-Therm system in action, demonstrating the "peak shaving" algorithm by showing real-time modulation of heating power in response to driving events.
+
+---
+
+### **About The Project**
+
+This project introduces **Intelli-Therm**, an intelligent, real-time heating optimization strategy designed to maximize Electric Vehicle (EV) driving range with a minimal, imperceptible impact on passenger comfort. By leveraging machine learning, Intelli-Therm tackles one of the most significant barriers to EV adoption: range anxiety, especially in winter conditions.
+
+#### **Problem Statement**
+
+Cabin heating systems in electric vehicles can drastically reduce driving range by up to **40% in cold weather**. This unpredictability is a major concern for drivers and a hurdle for the widespread adoption of sustainable transportation.
+
+#### **Solution: The Intelli-Therm Strategy**
+
+Intelli-Therm employs a predictive algorithm based on the concept of **"peak power shaving"**.
+- It uses a trained **XGBoost Regressor model** to predict the vehicle's powertrain energy demand 5-10 seconds into the future.
+- When the model anticipates a high-demand phase, like sudden acceleration, the algorithm strategically and momentarily reduces heating power by a small, imperceptible amount (e.g., 15%).
+- During low-demand phases, such as cruising or regenerative braking, the system can compensate for the slight reduction.
+
+This process smooths the overall load on the battery, enhancing its efficiency and extending the vehicle's operational range.
+
+---
+
+### **Features**
+
+- **Predictive Power Management**: Forecasts short-term energy demand from the powertrain.
+- **Dynamic Heating Control**: Intelligently modulates heater power based on real-time driving behavior.
+- **Peak Power Shaving**: Reduces battery load during high-demand events to improve efficiency.
+- **Data-Driven**: Trained on the comprehensive "Battery and Heating Data in Real Driving Cycles" dataset.
+- **Validated Performance**: Proven to extend EV range by approximately **7% in -10°C conditions** through simulation.
+
+---
+
+### **Technology Stack**
+
+- **Language**: Python
+- **Data Manipulation**: Pandas, NumPy
+- **Machine Learning**: Scikit-learn, XGBoost
+- **Data Visualization**: Matplotlib, Seaborn
+
+---
+
+### **Dataset**
+
+The project is built upon the **"Battery and Heating Data in Real Driving Cycles"** dataset from IEEE DataPort. This dataset was chosen for its detailed focus on the interplay between real-world driving, battery performance, and the heating circuit of a BMW i3. It includes:
+- **Measurement Data**: Time-series data from 72 real-world driving trips, used for model training.
+- **Simulation Data**: Data from a validated model under various controlled conditions, used for testing and validating the Intelli-Therm strategy.
+
+---
+
+### **Methodology**
+
+The project followed a structured four-phase methodology:
+
+1.  **Data Consolidation & EDA**: All 72 trip files were merged into a master DataFrame. Exploratory Data Analysis revealed strong correlations between throttle/speed and battery current, validating the core problem.
+2.  **Feature Engineering**: Critical new features were created, including:
+    - `powertrain_load_W`: Calculated as `battery_voltage_V * battery_current_A`.
+    - `acceleration` and `throttle_change_rate`: To capture vehicle dynamics.
+    - **Lagged Features**: To give the model a "memory" of the immediate past state of the vehicle.
+3.  **Predictive Modeling**: An **XGBoost Regressor** was trained to predict `powertrain_load_W` 5-10 seconds in the future. The dataset was split by trips to ensure a realistic testing scenario and prevent data leakage.
+4.  **Intelli-Therm Control Algorithm**: The core algorithm uses the model's predictions. If the predicted load exceeds a defined `HIGH_POWER_THRESHOLD` (the 90th percentile), it temporarily reduces heating power.
+
+---
+
+### **Installation**
+
+1.  Clone the repository:
+    ```sh
+    git clone https://your-repository-url/Intelli-Therm.git
+    cd Intelli-Therm
+    ```
+2.  Install the required Python libraries:
+    ```sh
+    pip install pandas numpy matplotlib seaborn xgboost scikit-learn tqdm
+    ```
+3.  Download the dataset from [IEEE DataPort](https://ieee-dataport.org/documents/battery-and-heating-data-real-driving-cycles) and place the `Measurement Data` folder in the project's root directory.
+
+---
+
+### **Usage**
+
+1.  Open the `intelli_therm_model.py` script.
+2.  Update the `measurement_data_path` variable to point to the location of your `Measurement Data` folder:
+    ```python
+    measurement_data_path = r"path/to/your/Measurement Data"
+    ```
+3.  Run the script from your terminal:
+    ```sh
+    python intelli_therm_model.py
+    ```
+The script will automatically load the data, perform feature engineering, train the model, and run a simulation to validate the results.
+
+---
+
+### **Validation and Results**
+
+The Intelli-Therm algorithm was validated by replaying a cold-weather simulation scenario (`-10°C`) twice: once with the standard heating profile and once with the active Intelli-Therm algorithm.
+
+- The analysis demonstrated a **~7% extension in the vehicle's range**.
+- The final dashboard visualization clearly showed the algorithm reducing heating power during high acceleration, resulting in a slower depletion of the battery's state of charge compared to the baseline.
+
+---
+
+### **Contribution to UN Sustainable Development Goals**
+
+This project directly contributes to the following UN SDGs:
+- **SDG 7 (Affordable and Clean Energy)**: By making electric transportation more efficient.
+- **SDG 11 (Sustainable Cities and Communities)**: By making EVs more viable and practical for everyday use.
+
